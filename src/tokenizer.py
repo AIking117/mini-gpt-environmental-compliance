@@ -81,7 +81,6 @@ class CharacterTokenizer:
 
         return "".join([self.itos[i] for i in ids])
 
-
 # ==========================================================
 # Main Program
 #
@@ -90,12 +89,16 @@ class CharacterTokenizer:
 # python src/tokenizer.py
 #
 # ==========================================================
-if __name__ == "__main__":        # Below code runs only when we execute: python src/tokenizer.py
+if __name__ == "__main__":
 
-    # Sample text for testing
-    sample_text = "SWPPP and MS4 compliance"
+    # Path to the raw text file
+    file_path = "data/raw/sample.txt"
 
-    # Create tokenizer object
+    # Read the full text file into Python as one string
+    with open(file_path, "r", encoding="utf-8") as file:
+        sample_text = file.read()
+
+    # Create tokenizer object using text from the file
     tokenizer = CharacterTokenizer(sample_text)
 
     # Encode text into token IDs
@@ -105,8 +108,9 @@ if __name__ == "__main__":        # Below code runs only when we execute: python
     decoded = tokenizer.decode(encoded)
 
     # Display results
-    print("Original text:", sample_text)
+    print("File path:", file_path)
+    print("Original text preview:", sample_text[:120])
     print("Vocabulary:", tokenizer.chars)
     print("Vocabulary size:", tokenizer.vocab_size)
-    print("Encoded:", encoded)
-    print("Decoded:", decoded)
+    print("Encoded preview:", encoded[:60])
+    print("Decoded preview:", decoded[:120])
