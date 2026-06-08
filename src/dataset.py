@@ -1,54 +1,33 @@
-# ==========================================================
-# Dataset Utilities                       # Created: 2026-06-01
-#
+# Dataset Utilities
 # Purpose:
-# Convert token IDs into input/target pairs for next-token
-# prediction.
-#
-# GPT-style models learn by predicting the next token.
-#
-# Example:
-#
-# tokens: [10, 20, 30, 40, 50]
-#
-# input:  [10, 20, 30, 40]
-# target: [20, 30, 40, 50]
-#
-# ==========================================================
+# Convert token IDs into input/target pairs for next-token prediction.
+
+from tokenizer import CharacterTokenizer
 
 
 def create_input_target_pairs(token_ids, context_length):
     """
-    Create training examples for next-token prediction.
+    Create input and target sequences for next-token prediction.
 
-    Parameters
-    ----------
-    token_ids : list[int]
-        A list of token IDs created by the tokenizer.
+    token_ids:
+        A list of integer token IDs.
 
-    context_length : int
-        How many tokens the model sees at one time.
+    context_length:
+        How many token IDs the model sees at one time.
 
-    Returns
-    -------
-    inputs : list[list[int]]
-        Input token sequences.
+    Example:
+        token_ids = [10, 20, 30, 40, 50]
+        context_length = 4
 
-    targets : list[list[int]]
-        Target token sequences shifted one step forward.
+        input  = [10, 20, 30, 40]
+        target = [20, 30, 40, 50]
     """
 
     inputs = []
     targets = []
 
-    # We stop at len(token_ids) - context_length
-    # because each target needs one extra token after the input.
     for i in range(len(token_ids) - context_length):
-
-        # Input sequence
         x = token_ids[i : i + context_length]
-
-        # Target sequence shifted one token forward
         y = token_ids[i + 1 : i + context_length + 1]
 
         inputs.append(x)
@@ -57,32 +36,34 @@ def create_input_target_pairs(token_ids, context_length):
     return inputs, targets
 
 
-# ==========================================================
-# Main Program
-#
-# This section is only for testing this file directly.
-#
-# Run:
-#
-# python src/dataset.py
-#
-# ==========================================================
 if __name__ == "__main__":
+    file_path = "data/raw/sample.txt"
 
-    # Small fake token list for testing
-    token_ids = [10, 20, 30, 40, 50, 60]
+    with open(file_path, "r", encoding="utf-8") as file:
+        sample_text = file.read()
 
-    # The model will see 4 tokens at a time
-    context_length = 4
+    tokenizer = CharacterTokenizer(sample_text)
+    token_ids = tokenizer.encode(sample_text)
+
+    context_length = 16
 
     inputs, targets = create_input_target_pairs(token_ids, context_length)
 
-    print("Token IDs:", token_ids)
+    print("File path:", file_path)
+    print("Total characters:", len(sample_text))
+    print("Total token IDs:", len(token_ids))
+    print("Vocabulary size:", tokenizer.vocab_size)
     print("Context length:", context_length)
-    print()
+    print("Number of training examples:", len(inputs))
 
-    for i in range(len(inputs)):
-        print(f"Example {i + 1}")
-        print("Input: ", inputs[i])
-        print("Target:", targets[i])
-        print()
+    print("\nFirst input token IDs:")
+    print(inputs[0])
+
+    print("\nFirst target token IDs:")
+    print(targets[0])
+
+    print("\nFirst input decoded:")
+    print(tokenizer.decode(inputs[0]))
+
+    print("\nFirst target decoded:")
+    print(tokenizer.decode(targets[0]))
