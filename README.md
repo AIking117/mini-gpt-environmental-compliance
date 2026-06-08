@@ -59,6 +59,7 @@ mini-gpt-environmental-compliance/
 │
 ├── README.md
 └── requirements.txt
+```
 
 ## Learning Notes: Dataset Preparation                         # Created: 2026-06-08
 
