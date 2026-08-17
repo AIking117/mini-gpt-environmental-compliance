@@ -3,7 +3,6 @@
 # Convert token IDs into input/target pairs for next-token prediction.
 
 import torch
-
 from tokenizer import CharacterTokenizer
 
 
